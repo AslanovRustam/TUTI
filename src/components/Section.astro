@@ -1,0 +1,47 @@
+---
+/**
+ * Секція на всю ширину.
+ *
+ * Кольорові блоки «розкриваються» при появі: стартують меншими й
+ * скругленими з усіх боків, потім пружинять у повну ширину.
+ */
+import type { Tone } from "../content/tones";
+
+interface Props {
+  id?: string;
+  tone?: Tone | "paper";
+  class?: string;
+}
+
+const { id, tone = "paper", class: extra = "" } = Astro.props as Props;
+
+const fills: Record<string, string> = {
+  paper: "",
+  sky: "bg-sky",
+  grass: "bg-grass",
+  honey: "bg-honey",
+  coral: "bg-coral",
+  berry: "bg-berry",
+};
+
+const colored = tone !== "paper";
+---
+
+<section id={id} class:list={["relative", extra]}>
+  {/* Анімується внутрішній шар, а спостерігач стежить за зовнішньою
+      секцією. Якщо стежити за самим анімованим блоком, він на межі
+      екрана починає блимати: з'явився -> змінив розмір -> вийшов
+      із зони видимості -> зник -> знову з'явився. */}
+  <div
+    data-watch-parent={colored ? "" : undefined}
+    class:list={[
+      "stars relative px-5 py-24 sm:px-8 sm:py-32",
+      fills[tone],
+      colored && "stars-light reveal reveal-block overflow-hidden",
+    ]}
+  >
+    <div class="mx-auto max-w-7xl">
+      <slot />
+    </div>
+  </div>
+</section>

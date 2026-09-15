@@ -1,0 +1,96 @@
+---
+import "../styles/global.css";
+import { site } from "../content/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = site.title, description = site.description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, site.url).href;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: site.name,
+  url: site.url,
+  description: site.description,
+};
+---
+
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={site.locale} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+    {/* TODO: og-зображення 1200×630 у public/og.jpg */}
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#faf7f1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)}></script>
+  </head>
+
+  <body>
+    <slot />
+
+    <script>
+      // Поява блоків при скролі. Стан двобічний: блок згортається,
+      // коли йде з екрана, тож анімація однаково грає і вниз, і вгору.
+      // Блоки сховані засобами CSS, тож будь-який шлях, на якому
+      // спостерігач не запрацює, мусить показати їх одразу: вимкнений
+      // JS — <noscript> нижче; «менше руху» або старий браузер без
+      // IntersectionObserver — гілка showAll.
+      const items = document.querySelectorAll<HTMLElement>(".reveal");
+      const showAll = () => items.forEach((el) => el.classList.add("is-visible"));
+
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (reduced || !("IntersectionObserver" in window)) {
+        showAll();
+      } else {
+        // Блок із data-watch-parent анімується сам, а стежимо за його
+        // батьком: трансформація зсуває рамку елемента, і спостереження
+        // за ним самим дає блимання на межі екрана.
+        const watched = new Map<Element, HTMLElement>();
+        for (const item of items) {
+          const target = item.hasAttribute("data-watch-parent")
+            ? (item.parentElement ?? item)
+            : item;
+          watched.set(target, item);
+        }
+
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              watched.get(entry.target)?.classList.toggle("is-visible", entry.isIntersecting);
+            }
+          },
+          { rootMargin: "0px 0px -8% 0px", threshold: 0.04 },
+        );
+        for (const target of watched.keys()) io.observe(target);
+      }
+    </script>
+    <noscript>
+      <style>
+        .reveal {
+          opacity: 1;
+          transform: none;
+        }
+      </style>
+    </noscript>
+  </body>
+</html>

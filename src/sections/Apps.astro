@@ -1,0 +1,91 @@
+---
+import { getImage } from "astro:assets";
+
+import Section from "../components/Section.astro";
+import { art } from "../content/images";
+import { apps, games } from "../content/site";
+import { tones, type Tone } from "../content/tones";
+
+const titleBySlug = new Map(games.map((g) => [g.slug, g.title]));
+
+// Дві версії кадру: широка для десктопа й вертикальна для телефона.
+// Astro <Image> не вміє міняти джерело за медіа-запитом, тому збираємо
+// <picture> самі, а оптимізацію робить getImage.
+const covers = await Promise.all(
+  apps.map(async (app) => ({
+    wide: await getImage({
+      src: art(app.cover),
+      widths: [900, 1300, 1880],
+      format: "webp",
+    }),
+    tall: await getImage({
+      src: art(app.coverTall),
+      widths: [480, 760, 953],
+      format: "webp",
+    }),
+  })),
+);
+---
+
+<Section id="apps">
+  <header class="mx-auto max-w-2xl text-center">
+    <h2 class="text-[clamp(1.9rem,4.5vw,3.25rem)]">Наші ігри</h2>
+    <p class="mt-3 text-lg text-ink-soft">
+      Чотири застосунки, десять міні-ігор. Усі в розробці — напишіть, і ми повідомимо про реліз.
+    </p>
+  </header>
+
+  {/* Картки липкі з наростаючим відступом — при скролі вони наїжджають
+      одна на одну, і згори видно край попередньої. На телефоні відступ
+      менший: інакше низ картки не встигають прочитати до того,
+      як наїде наступна. */}
+  <ul class="mt-14 space-y-6">
+    {apps.map((app, i) => (
+      <li
+        class="sticky top-[var(--stick-sm)] sm:top-[var(--stick-md)]"
+        style={`--stick-sm:${1.25 + i * 0.75}rem; --stick-md:${6.5 + i * 1.25}rem`}
+      >
+        <article class="relative aspect-[2/3] overflow-hidden rounded-[2rem] ring-1 ring-ink/10 sm:aspect-[1881/836]">
+          <picture>
+            <source
+              media="(min-width: 640px)"
+              srcset={covers[i].wide.srcSet.attribute}
+              sizes="(min-width: 1280px) 1280px, 96vw"
+              type="image/webp"
+            />
+            <img
+              src={covers[i].tall.src}
+              srcset={covers[i].tall.srcSet.attribute}
+              sizes="96vw"
+              alt={`Кадр із гри «${app.title}»`}
+              loading="lazy"
+              decoding="async"
+              class="absolute inset-0 h-full w-full object-cover object-top"
+            />
+          </picture>
+
+          {/* Текстовий блок унизу, з відступом 8px від краю картки.
+              На телефоні — на всю ширину: у вертикальних кадрах низ порожній.
+              На десктопі — зліва: у широких кадрах персонаж дістає майже до
+              низу, і блок на всю ширину його б перекривав. */}
+          <div class="absolute right-2 bottom-2 left-2 rounded-[1.5rem] bg-white/95 p-5 backdrop-blur-sm sm:right-auto sm:max-w-[27rem] sm:p-7">
+            <span class="inline-block rounded-full bg-honey px-3 py-1 text-sm font-bold">
+              Скоро
+            </span>
+            <h3 class="mt-3.5 text-2xl sm:text-3xl">{app.title}</h3>
+            <p class={`mt-1 font-bold ${tones[app.tone as Tone].text}`}>{app.tagline}</p>
+            <p class="mt-4 max-w-xl leading-relaxed text-ink-soft">{app.description}</p>
+
+            <ul class="mt-7 flex flex-wrap gap-2">
+              {app.games.map((slug) => (
+                <li class="rounded-full bg-paper-deep px-3 py-1 text-sm font-semibold text-ink-soft">
+                  {titleBySlug.get(slug) ?? slug}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </article>
+      </li>
+    ))}
+  </ul>
+</Section>

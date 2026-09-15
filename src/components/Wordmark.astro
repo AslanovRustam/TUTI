@@ -1,0 +1,32 @@
+---
+import { Image } from "astro:assets";
+
+import { art } from "../content/images";
+
+interface Props {
+  class?: string;
+  size?: "sm" | "md";
+}
+
+const { class: extra = "", size = "sm" } = Astro.props as Props;
+const logo = art("logo");
+
+const sizes = { sm: "h-10 sm:h-11", md: "h-14" };
+---
+
+<a
+  href="#top"
+  class:list={[
+    "inline-block transition-transform duration-300 ease-bounce hover:-translate-y-0.5",
+    extra,
+  ]}
+>
+  <Image
+    src={logo}
+    alt="TUTI Games"
+    widths={[180, 360]}
+    sizes="180px"
+    class:list={["w-auto", sizes[size]]}
+    loading="eager"
+  />
+</a>

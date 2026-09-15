@@ -1,0 +1,36 @@
+---
+import Section from "../components/Section.astro";
+import SocialIcon from "../components/SocialIcon.astro";
+import { contact } from "../content/site";
+---
+
+<Section id="contact" tone="coral" class="mt-5 text-center">
+  <div class="mx-auto max-w-2xl">
+    <h2 class="text-[clamp(2rem,5.5vw,3.75rem)]">{contact.title}</h2>
+
+    <p class="mx-auto mt-3 max-w-lg text-lg">{contact.lead}</p>
+
+    <a
+      href={`mailto:${contact.email}`}
+      class="card mt-10 inline-block rounded-full bg-white px-7 py-4 text-[clamp(1.05rem,3.5vw,1.6rem)] font-extrabold break-all"
+    >
+      {contact.email}
+    </a>
+
+    <ul class="mt-9 flex flex-wrap items-center justify-center gap-2.5">
+      {contact.socials.map((social) => (
+        <li>
+          <a
+            href={social.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 rounded-full bg-white/75 py-2 pr-4 pl-3 text-sm font-bold transition-all duration-300 ease-bounce hover:-translate-y-1 hover:bg-white"
+          >
+            <SocialIcon name={social.label} class="h-5 w-5" />
+            {social.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</Section>

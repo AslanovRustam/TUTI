@@ -1,0 +1,5 @@
+_source/
+dist/
+.astro/
+node_modules/
+src/assets/

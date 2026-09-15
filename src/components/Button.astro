@@ -1,0 +1,56 @@
+---
+/**
+ * Кнопка-пігулка. Без рамки: суцільна заливка, як на референсі.
+ * На наведенні трохи підстрибує.
+ */
+interface Props {
+  href: string;
+  variant?: "ink" | "paper";
+  size?: "md" | "lg";
+  class?: string;
+}
+
+const { href, variant = "ink", size = "md", class: extra = "" } = Astro.props as Props;
+
+const variants = {
+  ink: "bg-ink text-paper hover:bg-ink/90",
+  paper: "bg-white text-ink",
+};
+
+const sizes = {
+  md: "px-5 py-2.5 text-[0.95rem]",
+  lg: "px-7 py-3.5 text-base",
+};
+
+const external = href.startsWith("http");
+---
+
+<a
+  href={href}
+  class:list={[
+    "group inline-flex w-full items-center justify-center gap-2 rounded-full font-display font-semibold sm:w-auto",
+    "transition-transform duration-300 ease-bounce hover:-translate-y-1 active:translate-y-0",
+    variants[variant],
+    sizes[size],
+    extra,
+  ]}
+  {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+>
+  <slot />
+  {/* Стрілка саме SVG, а не «→»: текстовий символ не входить у latin-підмножину
+      Outfit і тягнув за собою окремий файл шрифту на 18 KB заради однієї гліфи. */}
+  <svg
+    aria-hidden="true"
+    width="15"
+    height="15"
+    viewBox="0 0 16 16"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="transition-transform duration-300 ease-bounce group-hover:translate-x-1"
+  >
+    <path d="M2.5 8h11M9.5 4l4 4-4 4" />
+  </svg>
+</a>

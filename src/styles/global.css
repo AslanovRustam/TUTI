@@ -1,0 +1,198 @@
+@import "tailwindcss";
+
+/* ── Шрифт ────────────────────────────────────────────────────────────
+   Nunito, самохост, один змінний файл на всі накреслення.
+   Кирилиця повна, разом з українською «ґ» (U+0490-0491).
+   Заголовки — 800, текст — 400/600.
+
+   ЗАМІНА ШРИФТУ: цей імпорт + --font-display / --font-sans нижче. */
+@import "@fontsource-variable/nunito/wght.css";
+
+@theme {
+  --font-display: "Nunito Variable", "Segoe UI", sans-serif;
+  --font-sans: "Nunito Variable", "Segoe UI", sans-serif;
+
+  /* ── Палітра ─────────────────────────────────────────────────
+     Блоки й картки відділяються кольором, а не рамкою чи тінню. */
+
+  --color-ink: #1e1b18;
+  --color-ink-soft: #6d645c;
+  --color-paper: #faf6ef;
+  --color-paper-deep: #f3ece0;
+  --color-white: #ffffff;
+
+  /* solid — заливка секції, soft — підкладка картки,
+     deep — текст на світлому: solid-кольори дають на білому
+     1.4–2.4:1 і не проходять WCAG AA. */
+  --color-sky: #5fb0ea;
+  --color-sky-soft: #d6ecfa;
+  --color-sky-deep: #1c6fa8;
+  --color-grass: #7bc96f;
+  --color-grass-soft: #dff2db;
+  --color-grass-deep: #2f7a3e;
+  --color-honey: #ffd75e;
+  --color-honey-soft: #fff3cf;
+  --color-honey-deep: #8a6300;
+  --color-coral: #ff8759;
+  --color-coral-soft: #ffe0d4;
+  --color-coral-deep: #b23c12;
+  --color-berry: #ffa8c5;
+  --color-berry-soft: #ffe6ee;
+  --color-berry-deep: #a8306a;
+
+  --radius-card: 1.75rem;
+  --radius-tile: 1.25rem;
+
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  --animate-sway: sway 9s var(--ease-soft) infinite;
+
+  @keyframes sway {
+    0%,
+    100% {
+      transform: translateY(0) rotate(-1.5deg);
+    }
+    50% {
+      transform: translateY(-12px) rotate(1.5deg);
+    }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-ink);
+    outline-offset: 3px;
+    border-radius: 8px;
+  }
+
+  ::selection {
+    background: var(--color-honey);
+    color: var(--color-ink);
+  }
+}
+
+@layer components {
+  /* Ледь помітні зірочки на тлі секції. Суто декор, тому малюються
+     псевдоелементом і не потрапляють ані в розмітку, ані до скрінрідерів. */
+  .stars {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .stars::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27320%27%20height%3D%27320%27%20viewBox%3D%270%200%20320%20320%27%20fill%3D%27%23000000%27%3E%3Cpath%20transform%3D%27translate%2834%2C46%29%20scale%280.95%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3Cpath%20transform%3D%27translate%28214%2C28%29%20scale%280.55%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3Cpath%20transform%3D%27translate%28150%2C128%29%20scale%280.7%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3Cpath%20transform%3D%27translate%2858%2C196%29%20scale%281.25%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3Cpath%20transform%3D%27translate%28248%2C168%29%20scale%280.6%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3Cpath%20transform%3D%27translate%28120%2C268%29%20scale%280.85%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3Cpath%20transform%3D%27translate%28286%2C232%29%20scale%280.45%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3C%2Fsvg%3E");
+    background-size: 560px 560px;
+    opacity: 0.028;
+  }
+
+  .stars-light::before {
+    background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27320%27%20height%3D%27320%27%20viewBox%3D%270%200%20320%20320%27%20fill%3D%27%23ffffff%27%3E%3Cpath%20transform%3D%27translate%2834%2C46%29%20scale%280.95%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3Cpath%20transform%3D%27translate%28214%2C28%29%20scale%280.55%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3Cpath%20transform%3D%27translate%28150%2C128%29%20scale%280.7%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3Cpath%20transform%3D%27translate%2858%2C196%29%20scale%281.25%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3Cpath%20transform%3D%27translate%28248%2C168%29%20scale%280.6%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3Cpath%20transform%3D%27translate%28120%2C268%29%20scale%280.85%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3Cpath%20transform%3D%27translate%28286%2C232%29%20scale%280.45%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3C%2Fsvg%3E");
+    opacity: 0.07;
+  }
+
+  /* Картка. Жодних тіней — тримається на різниці кольору з фоном
+     секції. На наведенні лише трохи підіймається. */
+  .card {
+    transition: transform 0.4s var(--ease-bounce);
+  }
+
+  .card:hover,
+  .card:focus-within {
+    transform: translateY(-5px);
+  }
+
+  /* ── Поява при скролі ───────────────────────────────────────
+     Блок «розкривається»: стартує трохи меншим і сильніше
+     скругленим, потім пружинить у свою форму. Стан двобічний —
+     коли блок іде з екрана, він згортається назад, тож анімація
+     однаково грає і вниз, і вгору (див. Layout.astro). */
+  .reveal {
+    --r-from: 3rem;
+    --r-to: 0px;
+    opacity: 0;
+    transform: scale(0.96);
+    border-radius: var(--r-from);
+    transition:
+      opacity 0.45s var(--ease-soft),
+      transform 0.65s var(--ease-bounce),
+      border-radius 0.65s var(--ease-bounce);
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    border-radius: var(--r-to);
+  }
+
+  /* Кольорова секція: стартує скругленою з усіх боків і
+     розкривається на всю ширину. */
+  .reveal-block {
+    --r-from: 4rem;
+    --r-to: 0px;
+  }
+
+  .reveal-card {
+    --r-from: 3rem;
+    --r-to: var(--radius-card);
+  }
+
+  .reveal-tile {
+    --r-from: 2.25rem;
+    --r-to: var(--radius-tile);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal,
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    border-radius: var(--r-to);
+    transition: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
