@@ -1,4 +1,13 @@
+# залежності
 node_modules/
+
+# збірки й кеші
 .next/
 out/
+*.tsbuildinfo
+
+# службове
 next-env.d.ts
+.DS_Store
+Thumbs.db
+*.log
