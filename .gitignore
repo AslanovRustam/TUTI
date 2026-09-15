@@ -1,14 +1,4 @@
-# залежності
 node_modules/
-
-# збірки
 .next/
 out/
-dist/
-.astro/
-
-# службове
 next-env.d.ts
-.DS_Store
-Thumbs.db
-*.log

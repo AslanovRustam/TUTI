@@ -18,13 +18,13 @@ from PIL import Image, ImageDraw, ImageFilter
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "_source" / "screenshots"
 ILLUS = ROOT / "_source" / "illustrations"
-OUT_ILLUS = ROOT / "src" / "assets" / "illustrations"
+OUT_ILLUS = ROOT / "assets" / "illustrations"
 APPCOVERS = ROOT / "_source" / "app-covers"
-OUT_APPCOVERS = ROOT / "src" / "assets" / "app-covers"
+OUT_APPCOVERS = ROOT / "assets" / "app-covers"
 SOCIAL = ROOT / "_source" / "social" / "social"
-OUT_SOCIAL = ROOT / "src" / "assets" / "social"
-OUT_GAMES = ROOT / "src" / "assets" / "games"
-OUT_CHARS = ROOT / "src" / "assets" / "characters"
+OUT_SOCIAL = ROOT / "assets" / "social"
+OUT_GAMES = ROOT / "assets" / "games"
+OUT_CHARS = ROOT / "assets" / "characters"
 
 JPG_QUALITY = 86
 MAGIC = (255, 0, 255)
