@@ -40,6 +40,14 @@
   --color-berry-soft: #ffe6ee;
   --color-berry-deep: #a8306a;
 
+  /* Жовтий із лого — головна кнопка й акценти. Сам колір світлий,
+     тому для тексту й обводки беруться притемнені варіанти:
+     line дає 3.6:1 до білого (межа контрола), deep — 6.7:1 (текст). */
+  --color-sun: #fdba01;
+  --color-sun-soft: #fff3d1;
+  --color-sun-line: #b87a00;
+  --color-sun-deep: #7a5500;
+
   --radius-card: 1.75rem;
   --radius-tile: 1.25rem;
 
@@ -48,6 +56,10 @@
 
   --animate-sway: sway 9s var(--ease-soft) infinite;
 
+  /* Іконки цінностей зависають над картками. Кут нахилу в кожної свій —
+     задається змінною --float-tilt на самій іконці. */
+  --animate-float: float 6s var(--ease-soft) infinite;
+
   @keyframes sway {
     0%,
     100% {
@@ -55,6 +67,16 @@
     }
     50% {
       transform: translateY(-12px) rotate(1.5deg);
+    }
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0) rotate(var(--float-tilt, -4deg));
+    }
+    50% {
+      transform: translateY(-10px) rotate(calc(var(--float-tilt, -4deg) * -1));
     }
   }
 }
@@ -118,6 +140,69 @@
     opacity: 0.028;
   }
 
+  /* Той самий шар зірок, але повільно повзе вниз. Щоб петля була
+     непомітною, шар піднятий рівно на одну плитку візерунка й за цикл
+     проходить теж рівно плитку — кадр у кадр. Рухається transform,
+     а не background-position: так анімація лишається на композиторі. */
+  .stars-fall::before {
+    inset: -560px 0 0 0;
+    animation: star-fall 40s linear infinite;
+  }
+
+  @keyframes star-fall {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(560px);
+    }
+  }
+
+  /* Другий, значно рідший шар: три зірки на плитку. Падає в іншому
+     темпі й повільно розгоряється — на тлі рівного основного шару
+     виглядає так, ніби яскравішає частина зірок, а не весь візерунок.
+     На світлій секції зірки темні й ледь помітні, на кольоровій — білі
+     й помітно яскравіші; звідси змінні замість двох окремих правил. */
+  .stars-fall::after {
+    content: "";
+    position: absolute;
+    inset: -700px 0 0 0;
+    z-index: -1;
+    pointer-events: none;
+    --glow-from: 0.018;
+    --glow-to: 0.055;
+    background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27420%27%20height%3D%27420%27%20viewBox%3D%270%200%20420%20420%27%20fill%3D%27%23000000%27%3E%3Cpath%20transform%3D%27translate%2864%2C96%29%20scale%281.7%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3Cpath%20transform%3D%27translate%28300%2C214%29%20scale%281.15%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3Cpath%20transform%3D%27translate%28176%2C330%29%20scale%282.1%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3C%2Fsvg%3E");
+    background-size: 700px 700px;
+    animation:
+      star-fall-2 55s linear infinite,
+      star-glow 7s var(--ease-soft) infinite;
+  }
+
+  .stars-light.stars-fall::after {
+    --glow-from: 0.05;
+    --glow-to: 0.22;
+    background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27420%27%20height%3D%27420%27%20viewBox%3D%270%200%20420%20420%27%20fill%3D%27%23ffffff%27%3E%3Cpath%20transform%3D%27translate%2864%2C96%29%20scale%281.7%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3Cpath%20transform%3D%27translate%28300%2C214%29%20scale%281.15%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3Cpath%20transform%3D%27translate%28176%2C330%29%20scale%282.1%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3C%2Fsvg%3E");
+  }
+
+  @keyframes star-fall-2 {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(700px);
+    }
+  }
+
+  @keyframes star-glow {
+    0%,
+    100% {
+      opacity: var(--glow-from);
+    }
+    50% {
+      opacity: var(--glow-to);
+    }
+  }
+
   .stars-light::before {
     background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27320%27%20height%3D%27320%27%20viewBox%3D%270%200%20320%20320%27%20fill%3D%27%23ffffff%27%3E%3Cpath%20transform%3D%27translate%2834%2C46%29%20scale%280.95%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3Cpath%20transform%3D%27translate%28214%2C28%29%20scale%280.55%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3Cpath%20transform%3D%27translate%28150%2C128%29%20scale%280.7%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3Cpath%20transform%3D%27translate%2858%2C196%29%20scale%281.25%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3Cpath%20transform%3D%27translate%28248%2C168%29%20scale%280.6%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3Cpath%20transform%3D%27translate%28120%2C268%29%20scale%280.85%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3Cpath%20transform%3D%27translate%28286%2C232%29%20scale%280.45%29%27%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3C%2Fsvg%3E");
     opacity: 0.07;
@@ -132,6 +217,96 @@
   .card:hover,
   .card:focus-within {
     transform: translateY(-5px);
+  }
+
+  /* ── Поява героя ────────────────────────────────────────────
+     Перший екран видно одразу, тому тут не IntersectionObserver,
+     а звичайна анімація на завантаженні. Заголовок виростає з центру,
+     декор вилітає слідом і докручується до свого кута. */
+  .hero-pop {
+    animation: hero-pop 0.85s var(--ease-bounce) both;
+  }
+
+  .hero-deco {
+    --deco-tilt: 0deg;
+    animation: deco-pop 0.75s var(--ease-bounce) both;
+    animation-delay: 0.4s;
+  }
+
+  /* Картинка виростає знизу вгору: точка опори — нижній край, тож
+     низ лишається на місці, а кадр «розгортається» до заголовка. */
+  .hero-rise {
+    transform-origin: bottom center;
+    animation: hero-rise 0.9s var(--ease-bounce) both;
+    animation-delay: 0.2s;
+  }
+
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      transform: scale(0.82);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes hero-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.7);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes deco-pop {
+    from {
+      opacity: 0;
+      transform: rotate(calc(var(--deco-tilt) - 35deg)) scale(0.2);
+    }
+    to {
+      opacity: 1;
+      transform: rotate(var(--deco-tilt)) scale(1);
+    }
+  }
+
+  /* ── Іскри за курсором ──────────────────────────────────────
+     Шар живе поверх усього, але подій не ловить. Самі іскри створює
+     SiteScripts: лише на мишці й лише якщо не вимкнена анімація. */
+  .spark-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .spark {
+    position: absolute;
+    width: var(--spark-size);
+    height: var(--spark-size);
+    margin: calc(var(--spark-size) / -2);
+    background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%27-1%200%2026%2024%27%20fill%3D%27%23fdba01%27%3E%3Cpath%20d%3D%27M12%200c.7%205.9%205.4%2010.6%2011.3%2011.3v1.4C17.4%2013.4%2012.7%2018.1%2012%2024h-1.4C9.9%2018.1%205.2%2013.4-.7%2012.7v-1.4C5.2%2010.6%209.9%205.9%2010.6%200H12Z%27%2F%3E%3C%2Fsvg%3E")
+      center / contain no-repeat;
+    animation: spark 0.7s var(--ease-soft) forwards;
+  }
+
+  @keyframes spark {
+    0% {
+      opacity: 0;
+      transform: rotate(var(--spark-spin)) scale(0.2);
+    }
+    35% {
+      opacity: 0.85;
+    }
+    100% {
+      opacity: 0;
+      transform: rotate(calc(var(--spark-spin) + 70deg)) scale(1);
+    }
   }
 
   /* ── Поява при скролі ───────────────────────────────────────
@@ -193,6 +368,8 @@
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+    /* без цього декор героя лишався б невидимим свої 0.4s затримки */
+    animation-delay: 0ms !important;
     transition-duration: 0.01ms !important;
   }
 }

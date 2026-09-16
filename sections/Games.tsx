@@ -4,40 +4,16 @@ import Section from "@/components/Section";
 import { getArt } from "@/content/images";
 import { games } from "@/content/site";
 
-// Бенто на 10 плиток у сітці з 4 колонок — рівно чотири ряди без дірок:
-//   [ 0 0 1 1 ]   0 — велика 2x2
-//   [ 0 0 2 3 ]
-//   [ 4 5 6 6 ]
-//   [ 7 8 9 9 ]
-// Класи записані повними рядками, бо Tailwind сканує вихідний код.
-const SPANS = [
-  "col-span-2 row-span-2",
-  "col-span-2",
-  "col-span-1",
-  "col-span-1",
-  "col-span-1",
-  "col-span-1",
-  "col-span-2",
-  "col-span-1",
-  "col-span-1",
-  "col-span-2",
-];
+// Наклейки показуються великими — віддаємо їх без зайвого стиснення.
+const STICKER_QUALITY = 90;
 
-// На великій плитці назва більша — інакше вона губиться в кадрі.
-const TITLE = [
-  "text-xl sm:text-2xl",
-  "text-lg",
-  "text-base",
-  "text-base",
-  "text-base",
-  "text-base",
-  "text-lg",
-  "text-base",
-  "text-base",
-  "text-lg",
-];
+// Три великі плитки зверху, решта — квадратики під ними.
+const FEATURED = 3;
 
 export default function Games() {
+  const featured = games.slice(0, FEATURED);
+  const rest = games.slice(FEATURED);
+
   return (
     <Section tone="grass">
       <header className="mx-auto max-w-2xl text-center">
@@ -45,29 +21,111 @@ export default function Games() {
         <p className="mt-3 text-lg">Кожна вчить чогось одного й займає кілька хвилин</p>
       </header>
 
-      <ul className="mt-12 grid auto-rows-[7rem] grid-cols-2 gap-3 sm:auto-rows-[8.5rem] md:grid-cols-4 lg:auto-rows-[10rem]">
-        {games.map((game, i) => (
+      {/* На телефоні перша плитка займає обидві колонки — три однакові
+          широкі картки одна під одною розтягнули б блок удвічі. */}
+      <ul className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3">
+        {featured.map((game, i) => (
           <li
             key={game.slug}
-            className={["reveal reveal-tile group relative overflow-hidden", SPANS[i]].join(" ")}
-            style={{ transitionDelay: `${(i % 5) * 60}ms` }}
+            className={[
+              "relative",
+              i === 0
+                ? "col-span-2 aspect-[16/9] sm:col-span-1 sm:aspect-[4/3]"
+                : "aspect-square sm:aspect-[4/3]",
+            ].join(" ")}
           >
-            <Image
-              src={getArt(game.cover)}
-              alt=""
-              sizes="(min-width: 1024px) 45vw, 90vw"
-              className="block h-full w-full object-cover object-[50%_58%] transition-transform duration-500 ease-bounce group-hover:scale-105"
-            />
+            <Frame game={game} big delay={i * 70} />
+            {/* Кубики на куті першої картки — рамка сітки лишається
+                чистою, декор висить поверх неї. */}
+            {i === 0 && (
+              <Image
+                src={getArt("decor-cubes")}
+                alt=""
+                quality={STICKER_QUALITY}
+                sizes="(min-width: 640px) 288px, 176px"
+                className="pointer-events-none absolute -top-8 -left-5 h-auto w-24 -rotate-12 min-[1440px]:-left-14 sm:-top-14 sm:-left-5 sm:w-40"
+              />
+            )}
+          </li>
+        ))}
+      </ul>
 
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/40 to-transparent" />
-
-            <div className="absolute inset-x-0 bottom-0 p-3.5 sm:p-4">
-              <h3 className={["leading-tight text-paper", TITLE[i]].join(" ")}>{game.title}</h3>
-              <p className="mt-1 text-xs font-semibold text-paper/70">{game.skill}</p>
-            </div>
+      {/* Сім квадратиків. Остання плитка розтягується на дві колонки там,
+          де ряд інакше лишився б із діркою: 2 колонки -> 3+3+1, 4 -> 4+3. */}
+      <ul className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
+        {rest.map((game, i) => (
+          <li
+            key={game.slug}
+            className={[
+              "relative",
+              i === rest.length - 1
+                ? "col-span-2 aspect-[2/1] lg:col-span-1 lg:aspect-square"
+                : "aspect-square",
+            ].join(" ")}
+          >
+            <Frame game={game} delay={(i % 4) * 60} clearRight={i === rest.length - 1} />
+            {i === rest.length - 1 && (
+              <Image
+                src={getArt("decor-stars-trio")}
+                alt=""
+                quality={STICKER_QUALITY}
+                sizes="(min-width: 640px) 224px, 160px"
+                className="pointer-events-none absolute -right-4 -bottom-8 h-auto w-20 rotate-12 sm:-right-5 sm:-bottom-14 sm:w-28"
+              />
+            )}
           </li>
         ))}
       </ul>
     </Section>
+  );
+}
+
+type FrameProps = {
+  game: (typeof games)[number];
+  big?: boolean;
+  delay: number;
+  /** Праворуч унизу лежить наклейка — звільняємо під неї місце в підписі. */
+  clearRight?: boolean;
+};
+
+function Frame({ game, big = false, delay, clearRight = false }: FrameProps) {
+  return (
+    <div
+      className={[
+        "reveal group relative h-full overflow-hidden",
+        big ? "reveal-card" : "reveal-tile",
+      ].join(" ")}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      <Image
+        src={getArt(game.cover)}
+        alt=""
+        sizes={big ? "(min-width: 640px) 33vw, 96vw" : "(min-width: 1024px) 14vw, 48vw"}
+        className="ease-bounce block h-full w-full object-cover object-[50%_58%] transition-transform duration-500 group-hover:scale-105"
+      />
+
+      <div className="from-ink/95 via-ink/40 absolute inset-0 bg-gradient-to-t to-transparent" />
+
+      <div
+        className={[
+          "absolute inset-x-0 bottom-0 p-3 sm:p-3.5",
+          clearRight ? "pr-12 sm:pr-14" : "",
+        ].join(" ")}
+      >
+        <h3
+          className={["text-paper leading-tight", big ? "text-lg sm:text-xl" : "text-sm"].join(" ")}
+        >
+          {game.title}
+        </h3>
+        <p
+          className={[
+            "text-paper/70 mt-1 font-semibold",
+            big ? "text-xs" : "text-[0.6875rem]",
+          ].join(" ")}
+        >
+          {game.skill}
+        </p>
+      </div>
+    </div>
   );
 }

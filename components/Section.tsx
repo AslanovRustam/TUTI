@@ -9,6 +9,8 @@ import type { Tone } from "@/content/tones";
 type Props = {
   id?: string;
   tone?: Tone | "paper";
+  /** Зірочки на тлі повільно падають униз. */
+  starfall?: boolean;
   className?: string;
   children: React.ReactNode;
 };
@@ -22,7 +24,13 @@ const fills: Record<string, string> = {
   berry: "bg-berry",
 };
 
-export default function Section({ id, tone = "paper", className = "", children }: Props) {
+export default function Section({
+  id,
+  tone = "paper",
+  starfall = false,
+  className = "",
+  children,
+}: Props) {
   const colored = tone !== "paper";
 
   return (
@@ -36,6 +44,7 @@ export default function Section({ id, tone = "paper", className = "", children }
         className={[
           "stars relative px-5 py-24 sm:px-8 sm:py-32",
           fills[tone],
+          starfall ? "stars-fall" : "",
           colored ? "stars-light reveal reveal-block overflow-hidden" : "",
         ].join(" ")}
       >

@@ -12,7 +12,7 @@ export default function Header() {
           вмикається класом із SiteScripts. */}
       <div
         data-bar
-        className="mx-auto flex max-w-7xl items-center justify-between gap-4 rounded-full px-4 py-2.5 transition-all duration-300 ease-soft sm:px-6"
+        className="ease-soft mx-auto flex max-w-7xl items-center justify-between gap-4 rounded-full px-4 py-2.5 transition-all duration-300 sm:px-6"
       >
         <Wordmark />
 
@@ -22,7 +22,7 @@ export default function Header() {
               <li key={item.href}>
                 <a
                   href={item.href}
-                  className="inline-block rounded-full px-4 py-2 text-[0.95rem] font-bold transition-colors duration-200 hover:bg-ink hover:text-paper"
+                  className="hover:bg-ink hover:text-paper inline-block rounded-full px-4 py-2 text-[0.95rem] font-bold transition-colors duration-200"
                 >
                   {item.label}
                 </a>
@@ -36,20 +36,20 @@ export default function Header() {
           data-menu-toggle
           aria-expanded="false"
           aria-controls="mobile-menu"
-          className="grid h-10 w-10 place-items-center rounded-full bg-paper-deep transition-transform duration-300 ease-bounce hover:-translate-y-0.5 md:hidden"
+          className="bg-paper-deep ease-bounce grid h-10 w-10 place-items-center rounded-full transition-transform duration-300 hover:-translate-y-0.5 md:hidden"
         >
           <span className="sr-only">Меню</span>
           <span aria-hidden="true" className="relative block h-3.5 w-4.5">
             <span
-              className="absolute inset-x-0 top-0 h-[2px] rounded-full bg-ink transition-transform duration-300"
+              className="bg-ink absolute inset-x-0 top-0 h-[2px] rounded-full transition-transform duration-300"
               data-bar-top
             />
             <span
-              className="absolute inset-x-0 top-1/2 h-[2px] -translate-y-1/2 rounded-full bg-ink transition-opacity duration-200"
+              className="bg-ink absolute inset-x-0 top-1/2 h-[2px] -translate-y-1/2 rounded-full transition-opacity duration-200"
               data-bar-mid
             />
             <span
-              className="absolute inset-x-0 bottom-0 h-[2px] rounded-full bg-ink transition-transform duration-300"
+              className="bg-ink absolute inset-x-0 bottom-0 h-[2px] rounded-full transition-transform duration-300"
               data-bar-bot
             />
           </span>
@@ -68,7 +68,7 @@ export default function Header() {
               <a
                 href={item.href}
                 data-menu-link
-                className="block rounded-[1.1rem] px-4 py-3 text-lg font-bold hover:bg-paper-deep"
+                className="hover:bg-paper-deep block rounded-[1.1rem] px-4 py-3 text-lg font-bold"
               >
                 {item.label}
               </a>

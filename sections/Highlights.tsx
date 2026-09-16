@@ -28,7 +28,7 @@ export default function Highlights() {
 
             <div className="flex flex-1 flex-col px-2 pt-5 pb-2">
               <h3 className="text-lg">{item.title}</h3>
-              <p className="mt-2.5 text-[0.95rem] leading-relaxed text-ink-soft">{item.text}</p>
+              <p className="text-ink-soft mt-2.5 text-[0.95rem] leading-relaxed">{item.text}</p>
             </div>
           </li>
         ))}

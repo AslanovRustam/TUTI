@@ -11,7 +11,7 @@ export default function Footer() {
         <div className="grid gap-10 text-center lg:grid-cols-3 lg:items-start lg:text-left">
           <div>
             <Wordmark size="md" className="mx-auto lg:mx-0" />
-            <p className="mx-auto mt-4 max-w-sm text-sm leading-relaxed text-ink-soft lg:mx-0">
+            <p className="text-ink-soft mx-auto mt-4 max-w-sm text-sm leading-relaxed lg:mx-0">
               {footer.note}
             </p>
           </div>
@@ -37,7 +37,7 @@ export default function Footer() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="grid h-11 w-11 place-items-center rounded-full bg-paper-deep transition-transform duration-300 ease-bounce hover:-translate-y-0.5 hover:bg-honey"
+                    className="bg-paper-deep ease-bounce hover:bg-honey grid h-11 w-11 place-items-center rounded-full transition-transform duration-300 hover:-translate-y-0.5"
                   >
                     <SocialIcon name={social.label} className="h-5 w-5" />
                     <span className="sr-only">{social.label}</span>
@@ -51,15 +51,15 @@ export default function Footer() {
             <h2 className="text-base font-bold">Зв&apos;язок</h2>
             <a
               href={`mailto:${contact.email}`}
-              className="mt-3 inline-block text-sm text-ink-soft hover:text-ink hover:underline"
+              className="text-ink-soft hover:text-ink mt-3 inline-block text-sm hover:underline"
             >
               {contact.email}
             </a>
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center gap-4 border-t border-ink/10 pt-6 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
-          <p className="text-sm text-ink-soft">
+        <div className="border-ink/10 mt-12 flex flex-col items-center gap-4 border-t pt-6 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
+          <p className="text-ink-soft text-sm">
             © {year} {site.name}
           </p>
           <ul className="flex flex-wrap gap-x-5 gap-y-2">
@@ -67,7 +67,7 @@ export default function Footer() {
               <li key={link.label}>
                 <a
                   href={link.href}
-                  className="text-sm text-ink-soft hover:text-ink hover:underline"
+                  className="text-ink-soft hover:text-ink text-sm hover:underline"
                 >
                   {link.label}
                 </a>

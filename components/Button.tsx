@@ -1,18 +1,24 @@
 /**
- * Кнопка-пігулка. Без рамки: суцільна заливка.
- * На телефоні розтягується на всю ширину, текст по центру.
+ * Кнопка-пігулка в кольорах лого.
+ *
+ * sun     — головна дія: жовта заливка, темний текст (9.9:1).
+ * outline — другорядна: біла, з жовтою обводкою й притемненим жовтим
+ *           текстом (6.7:1 на білому, обводка 3.6:1). Світлий жовтий
+ *           на тексті чи рамці не читався б узагалі.
+ *
+ * На телефоні кнопка розтягується на всю ширину, текст по центру.
  */
 type Props = {
   href: string;
-  variant?: "ink" | "paper";
+  variant?: "sun" | "outline";
   size?: "md" | "lg";
   className?: string;
   children: React.ReactNode;
 };
 
 const variants = {
-  ink: "bg-ink text-paper hover:bg-ink/90",
-  paper: "bg-white text-ink",
+  sun: "bg-sun text-ink hover:brightness-95",
+  outline: "bg-white text-sun-deep ring-2 ring-inset ring-sun-line hover:bg-sun-soft",
 };
 
 const sizes = {
@@ -22,7 +28,7 @@ const sizes = {
 
 export default function Button({
   href,
-  variant = "ink",
+  variant = "sun",
   size = "md",
   className = "",
   children,
@@ -33,8 +39,8 @@ export default function Button({
     <a
       href={href}
       className={[
-        "group inline-flex w-full items-center justify-center gap-2 rounded-full font-display font-semibold sm:w-auto",
-        "transition-transform duration-300 ease-bounce hover:-translate-y-1 active:translate-y-0",
+        "group font-display inline-flex w-full items-center justify-center gap-2 rounded-full font-semibold sm:w-auto",
+        "ease-bounce transition-transform duration-300 hover:-translate-y-1 active:translate-y-0",
         variants[variant],
         sizes[size],
         className,
@@ -54,7 +60,7 @@ export default function Button({
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="transition-transform duration-300 ease-bounce group-hover:translate-x-1"
+        className="ease-bounce transition-transform duration-300 group-hover:translate-x-1"
       >
         <path d="M2.5 8h11M9.5 4l4 4-4 4" />
       </svg>

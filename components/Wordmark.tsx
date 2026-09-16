@@ -14,7 +14,7 @@ export default function Wordmark({ className = "", size = "sm" }: Props) {
     <a
       href="#top"
       className={[
-        "inline-block transition-transform duration-300 ease-bounce hover:-translate-y-0.5",
+        "ease-bounce inline-block transition-transform duration-300 hover:-translate-y-0.5",
         className,
       ].join(" ")}
     >

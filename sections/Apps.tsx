@@ -40,7 +40,11 @@ function Cover({ app }: { app: (typeof apps)[number] }) {
 
   return (
     <picture>
-      <source media="(min-width: 640px)" srcSet={wideSrcSet} sizes="(min-width: 1280px) 1280px, 96vw" />
+      <source
+        media="(min-width: 640px)"
+        srcSet={wideSrcSet}
+        sizes="(min-width: 1280px) 1280px, 96vw"
+      />
       <img
         {...rest}
         srcSet={tallSrcSet}
@@ -56,7 +60,7 @@ export default function Apps() {
     <Section id="apps">
       <header className="mx-auto max-w-2xl text-center">
         <h2 className="text-[clamp(1.9rem,4.5vw,3.25rem)]">Наші ігри</h2>
-        <p className="mt-3 text-lg text-ink-soft">
+        <p className="text-ink-soft mt-3 text-lg">
           Чотири застосунки, десять міні-ігор. Усі в розробці — напишіть, і ми повідомимо про реліз.
         </p>
       </header>
@@ -77,7 +81,7 @@ export default function Apps() {
               } as React.CSSProperties
             }
           >
-            <article className="relative aspect-[2/3] overflow-hidden rounded-[2rem] ring-1 ring-ink/10 sm:aspect-[1881/836]">
+            <article className="ring-ink/10 relative aspect-[2/3] overflow-hidden rounded-[2rem] ring-1 sm:aspect-[1881/836]">
               <Cover app={app} />
 
               {/* Текстовий блок унизу, з відступом 8px від краю картки.
@@ -85,18 +89,18 @@ export default function Apps() {
                   На десктопі — зліва: у широких кадрах персонаж дістає майже до
                   низу, і блок на всю ширину його б перекривав. */}
               <div className="absolute right-2 bottom-2 left-2 rounded-[1.5rem] bg-white/95 p-5 backdrop-blur-sm sm:right-auto sm:max-w-[27rem] sm:p-7">
-                <span className="inline-block rounded-full bg-honey px-3 py-1 text-sm font-bold">
+                <span className="bg-honey inline-block rounded-full px-3 py-1 text-sm font-bold">
                   Скоро
                 </span>
                 <h3 className="mt-3.5 text-2xl sm:text-3xl">{app.title}</h3>
                 <p className={`mt-1 font-bold ${tones[app.tone as Tone].text}`}>{app.tagline}</p>
-                <p className="mt-4 max-w-xl leading-relaxed text-ink-soft">{app.description}</p>
+                <p className="text-ink-soft mt-4 max-w-xl leading-relaxed">{app.description}</p>
 
                 <ul className="mt-7 flex flex-wrap gap-2">
                   {app.games.map((slug) => (
                     <li
                       key={slug}
-                      className="rounded-full bg-paper-deep px-3 py-1 text-sm font-semibold text-ink-soft"
+                      className="bg-paper-deep text-ink-soft rounded-full px-3 py-1 text-sm font-semibold"
                     >
                       {titleBySlug.get(slug) ?? slug}
                     </li>

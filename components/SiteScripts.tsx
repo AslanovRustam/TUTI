@@ -44,6 +44,54 @@ export default function SiteScripts() {
     return () => observer.disconnect();
   }, []);
 
+  // ── Іскри за курсором ──────────────────────────────────────────────
+  // Тільки для мишки: на тачскріні курсора немає, а pointermove там
+  // приходить під час скролу й сипав би зірки посеред жесту.
+  useEffect(() => {
+    const fine = window.matchMedia("(pointer: fine)").matches;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!fine || reduced) return;
+
+    const layer = document.createElement("div");
+    layer.className = "spark-layer";
+    layer.setAttribute("aria-hidden", "true");
+    document.body.appendChild(layer);
+
+    // Іскра народжується не частіше ніж раз на 80 мс і не ближче ніж за
+    // 30 px від попередньої — інакше за курсором тягнеться суцільна смуга.
+    let lastX = 0;
+    let lastY = 0;
+    let nextAt = 0;
+
+    const onMove = (event: PointerEvent) => {
+      const now = performance.now();
+      if (now < nextAt) return;
+
+      const dx = event.clientX - lastX;
+      const dy = event.clientY - lastY;
+      if (dx * dx + dy * dy < 900) return;
+
+      lastX = event.clientX;
+      lastY = event.clientY;
+      nextAt = now + 80;
+
+      const spark = document.createElement("span");
+      spark.className = "spark";
+      spark.style.setProperty("--spark-size", `${7 + Math.random() * 9}px`);
+      spark.style.setProperty("--spark-spin", `${Math.random() * 90 - 45}deg`);
+      spark.style.left = `${event.clientX + (Math.random() * 20 - 10)}px`;
+      spark.style.top = `${event.clientY + (Math.random() * 20 - 10)}px`;
+      spark.addEventListener("animationend", () => spark.remove(), { once: true });
+      layer.appendChild(spark);
+    };
+
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      layer.remove();
+    };
+  }, []);
+
   // ── Шапка й мобільне меню ──────────────────────────────────────────
   useEffect(() => {
     const bar = document.querySelector<HTMLElement>("[data-bar]");

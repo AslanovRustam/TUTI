@@ -4,7 +4,7 @@ import { contact } from "@/content/site";
 
 export default function Contact() {
   return (
-    <Section id="contact" tone="coral" className="mt-5 text-center">
+    <Section id="contact" tone="coral" starfall className="mt-5 text-center">
       <div className="mx-auto max-w-2xl">
         <h2 className="text-[clamp(2rem,5.5vw,3.75rem)]">{contact.title}</h2>
 
@@ -24,7 +24,7 @@ export default function Contact() {
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-white/75 py-2 pr-4 pl-3 text-sm font-bold transition-all duration-300 ease-bounce hover:-translate-y-1 hover:bg-white"
+                className="ease-bounce inline-flex items-center gap-2 rounded-full bg-white/75 py-2 pr-4 pl-3 text-sm font-bold transition-all duration-300 hover:-translate-y-1 hover:bg-white"
               >
                 <SocialIcon name={social.label} className="h-5 w-5" />
                 {social.label}
