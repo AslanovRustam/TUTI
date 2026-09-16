@@ -28,6 +28,16 @@ import homeWide from "@/assets/app-covers/home-wide.webp";
 import kitchenTall from "@/assets/app-covers/kitchen-tall.webp";
 import kitchenWide from "@/assets/app-covers/kitchen-wide.webp";
 
+import decorCubes from "@/assets/decor/cubes.webp";
+import decorLines from "@/assets/decor/lines.webp";
+import decorStar from "@/assets/decor/star.webp";
+import decorStarsTrio from "@/assets/decor/stars-trio.webp";
+
+import faceBear from "@/assets/faces/bear.webp";
+import faceBiba from "@/assets/faces/biba.webp";
+import faceHedgehog from "@/assets/faces/hedgehog.webp";
+import faceSquirrel from "@/assets/faces/squirrel.webp";
+
 import cabinIndoors from "@/assets/illustrations/cabin-indoors.webp";
 import campLake from "@/assets/illustrations/camp-lake.webp";
 import campfireCooking from "@/assets/illustrations/campfire-cooking.webp";
@@ -58,6 +68,14 @@ const art = {
   "campfire-cooking": campfireCooking,
   "cast-turnaround-dressed": castTurnaroundDressed,
   "crew-winter": crewWinter,
+  "decor-cubes": decorCubes,
+  "decor-lines": decorLines,
+  "decor-star": decorStar,
+  "decor-stars-trio": decorStarsTrio,
+  "face-bear": faceBear,
+  "face-biba": faceBiba,
+  "face-hedgehog": faceHedgehog,
+  "face-squirrel": faceSquirrel,
   "hero-tuti": heroTuti,
   "home-tall": homeTall,
   "home-wide": homeWide,

@@ -23,6 +23,10 @@ APPCOVERS = ROOT / "_source" / "app-covers"
 OUT_APPCOVERS = ROOT / "assets" / "app-covers"
 SOCIAL = ROOT / "_source" / "social" / "social"
 OUT_SOCIAL = ROOT / "assets" / "social"
+FACES = ROOT / "_source" / "faces"
+OUT_FACES = ROOT / "assets" / "faces"
+DECOR = ROOT / "_source" / "decor"
+OUT_DECOR = ROOT / "assets" / "decor"
 OUT_GAMES = ROOT / "assets" / "games"
 OUT_CHARS = ROOT / "assets" / "characters"
 
@@ -160,6 +164,37 @@ def copy_social() -> None:
         print(f"  {out.relative_to(ROOT)}")
 
 
+def copy_stickers(src_dir: Path, out_dir: Path, label: str, box: int = 1100) -> None:
+    """Дрібна графіка з прозорим тлом: мордочки персонажів і декор.
+
+    Береться як є, тільки зрізаються порожні поля по альфі (інакше кожна
+    наклейка тягне за собою невидимий запас і її не притиснути до краю
+    картки) і зменшується до `box` по довшій стороні.
+
+    `box` навмисно великий: наклейки показуються до ~220 CSS-пікселів,
+    а на екранах 2x це вже 440 — з 512 вони милилися.
+    """
+    if not src_dir.is_dir():
+        return
+    files = sorted(p for p in src_dir.iterdir() if p.suffix.lower() in {".png", ".webp"})
+    if not files:
+        return
+
+    print(f"{label}:")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    for src in files:
+        im = Image.open(src).convert("RGBA")
+        bbox = im.getbbox()
+        if bbox:
+            im = im.crop(bbox)
+        if max(im.size) > box:
+            k = box / max(im.size)
+            im = im.resize((round(im.width * k), round(im.height * k)), Image.LANCZOS)
+        out = out_dir / f"{src.stem.lower()}.webp"
+        im.save(out, quality=92, method=6)
+        print(f"  {out.relative_to(ROOT)}  {im.size[0]}x{im.size[1]}")
+
+
 def copy_app_covers() -> None:
     """Обкладинки застосунків: широкі для десктопа (*-wide) і вертикальні
     для мобільного (*-tall). Персонаж угорі, низ лишений під текстовий блок."""
@@ -184,6 +219,8 @@ def copy_app_covers() -> None:
 
 def main() -> None:
     copy_social()
+    copy_stickers(FACES, OUT_FACES, "Мордочки персонажів")
+    copy_stickers(DECOR, OUT_DECOR, "Декор")
     copy_app_covers()
     copy_illustrations()
 
