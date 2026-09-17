@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import Wordmark from "./Wordmark";
 import { nav } from "@/content/site";
 
@@ -20,12 +22,12 @@ export default function Header() {
           <ul className="flex items-center gap-1">
             {nav.map((item) => (
               <li key={item.href}>
-                <a
+                <Link
                   href={item.href}
                   className="hover:bg-ink hover:text-paper inline-block rounded-full px-4 py-2 text-[0.95rem] font-bold transition-colors duration-200"
                 >
                   {item.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -65,13 +67,13 @@ export default function Header() {
         <ul className="flex flex-col gap-0.5">
           {nav.map((item) => (
             <li key={item.href}>
-              <a
+              <Link
                 href={item.href}
                 data-menu-link
                 className="hover:bg-paper-deep block rounded-[1.1rem] px-4 py-3 text-lg font-bold"
               >
                 {item.label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>

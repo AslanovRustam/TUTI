@@ -15,11 +15,14 @@ export const site = {
     "Студія TUTI Games малює вручну розвивальні ігри для дошкільнят. Світ Карпат, знайомі звірята, жодної реклами й покупок усередині.",
 } as const;
 
+// Якорі записані від кореня («/#apps», а не «#apps»): те саме меню
+// показується й на сторінках статей, звідки простий якір вів би нікуди.
 export const nav = [
-  { href: "#apps", label: "Ігри" },
-  { href: "#about", label: "Про нас" },
-  { href: "#careers", label: "Кар'єра" },
-  { href: "#contact", label: "Контакти" },
+  { href: "/#apps", label: "Ігри" },
+  { href: "/#about", label: "Про нас" },
+  { href: "/articles", label: "Статті" },
+  { href: "/#careers", label: "Кар'єра" },
+  { href: "/#contact", label: "Контакти" },
 ] as const;
 
 export const hero = {

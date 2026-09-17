@@ -1,4 +1,6 @@
 import SocialIcon from "./SocialIcon";
+import Link from "next/link";
+
 import Wordmark from "./Wordmark";
 import { contact, footer, nav, site } from "@/content/site";
 
@@ -22,9 +24,9 @@ export default function Footer() {
               <ul className="flex flex-wrap justify-center gap-x-5 gap-y-2">
                 {nav.map((item) => (
                   <li key={item.href}>
-                    <a href={item.href} className="text-sm font-semibold hover:underline">
+                    <Link href={item.href} className="text-sm font-semibold hover:underline">
                       {item.label}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>

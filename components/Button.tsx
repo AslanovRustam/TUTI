@@ -8,6 +8,8 @@
  *
  * На телефоні кнопка розтягується на всю ширину, текст по центру.
  */
+import Link from "next/link";
+
 type Props = {
   href: string;
   variant?: "sun" | "outline";
@@ -33,10 +35,14 @@ export default function Button({
   className = "",
   children,
 }: Props) {
+  // Всередині сайту — next/link, щоб перехід був без перезавантаження.
+  // Якорі й mailto лишаються звичайними посиланнями.
   const external = href.startsWith("http");
+  const inApp = href.startsWith("/");
+  const Tag = inApp ? Link : "a";
 
   return (
-    <a
+    <Tag
       href={href}
       className={[
         "group font-display inline-flex w-full items-center justify-center gap-2 rounded-full font-semibold sm:w-auto",
@@ -64,6 +70,6 @@ export default function Button({
       >
         <path d="M2.5 8h11M9.5 4l4 4-4 4" />
       </svg>
-    </a>
+    </Tag>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
 /**
@@ -9,6 +10,11 @@ import { useEffect } from "react";
  * Компонент нічого не малює — лише навішує обробники після монтування.
  */
 export default function SiteScripts() {
+  // Перехід між сторінками не перемонтовує цей компонент, тож без
+  // залежності від шляху спостерігач лишався б на старій розмітці,
+  // а блоки нової сторінки назавжди застрягли б прозорими.
+  const pathname = usePathname();
+
   // ── Поява блоків при скролі ────────────────────────────────────────
   // Стан двобічний: блок згортається, коли йде з екрана, тож анімація
   // однаково грає і вниз, і вгору.
@@ -42,7 +48,7 @@ export default function SiteScripts() {
 
     for (const target of watched.keys()) observer.observe(target);
     return () => observer.disconnect();
-  }, []);
+  }, [pathname]);
 
   // ── Іскри за курсором ──────────────────────────────────────────────
   // Тільки для мишки: на тачскріні курсора немає, а pointermove там
