@@ -83,7 +83,7 @@ export default function SiteScripts() {
 
       const spark = document.createElement("span");
       spark.className = "spark";
-      spark.style.setProperty("--spark-size", `${7 + Math.random() * 9}px`);
+      spark.style.setProperty("--spark-size", `${8 + Math.random() * 10.4}px`);
       spark.style.setProperty("--spark-spin", `${Math.random() * 90 - 45}deg`);
       spark.style.left = `${event.clientX + (Math.random() * 20 - 10)}px`;
       spark.style.top = `${event.clientY + (Math.random() * 20 - 10)}px`;

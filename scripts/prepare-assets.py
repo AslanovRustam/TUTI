@@ -27,6 +27,8 @@ FACES = ROOT / "_source" / "faces"
 OUT_FACES = ROOT / "assets" / "faces"
 DECOR = ROOT / "_source" / "decor"
 OUT_DECOR = ROOT / "assets" / "decor"
+CURSORS = ROOT / "_source" / "cursors"
+OUT_CURSORS = ROOT / "assets" / "cursors"
 OUT_GAMES = ROOT / "assets" / "games"
 OUT_CHARS = ROOT / "assets" / "characters"
 
@@ -164,6 +166,50 @@ def copy_social() -> None:
         print(f"  {out.relative_to(ROOT)}")
 
 
+# Курсори: ширина в CSS-пікселях і гаряча точка в частках кадру.
+# Ширини підібрані так, щоб сама рукавичка скрізь виглядала однаково —
+# у кадрах із зірочками чи знаком вона займає меншу частку висоти.
+# Гарячі точки — верхівка рукавички, а не декору над нею.
+#
+# Стрілки (_source/cursors/default.png) тут навмисно немає: звичайним
+# курсором тепер усюди палець, а зірочки лишилися ознакою клікабельного.
+# Файл лежить у _source на випадок, якщо стрілку захочуть повернути.
+CURSOR_SPECS = {
+    "pointer": (25, 0.470, 0.087),
+    "cta": (40, 0.450, 0.245),
+    "active": (37, 0.380, 0.230),
+    "not-allowed": (30, 0.500, 0.330),
+    "grab": (30, 0.500, 0.500),
+}
+
+
+def copy_cursors() -> None:
+    """Готує по два кадри на курсор: 1x і 2x для image-set.
+
+    Розміри й гарячі точки треба тримати синхронними з app/globals.css —
+    у CSS вони записані числами, бо cursor не вміє відсотків.
+    """
+    if not CURSORS.is_dir():
+        return
+    print("Курсори:")
+    OUT_CURSORS.mkdir(parents=True, exist_ok=True)
+    for name, (width, hx, hy) in CURSOR_SPECS.items():
+        src = CURSORS / f"{name}.png"
+        if not src.is_file():
+            print(f"  ! немає {src.relative_to(ROOT)}")
+            continue
+        im = Image.open(src).convert("RGBA")
+        im = im.crop(im.getbbox())
+        height = round(im.height * width / im.width)
+        for factor, suffix in ((1, ""), (2, "-2x")):
+            out = OUT_CURSORS / f"{name}{suffix}.png"
+            im.resize((width * factor, height * factor), Image.LANCZOS).save(out, optimize=True)
+        print(
+            f"  {name:12} {width}x{height}  гаряча точка "
+            f"{round(hx * width)} {round(hy * height)}"
+        )
+
+
 def copy_stickers(src_dir: Path, out_dir: Path, label: str, box: int = 1100) -> None:
     """Дрібна графіка з прозорим тлом: мордочки персонажів і декор.
 
@@ -219,6 +265,7 @@ def copy_app_covers() -> None:
 
 def main() -> None:
     copy_social()
+    copy_cursors()
     copy_stickers(FACES, OUT_FACES, "Мордочки персонажів")
     copy_stickers(DECOR, OUT_DECOR, "Декор")
     copy_app_covers()

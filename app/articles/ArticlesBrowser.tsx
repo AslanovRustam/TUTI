@@ -37,13 +37,64 @@ export default function ArticlesBrowser({ cards, tags, labels }: Props) {
       setFade({ start: el.scrollLeft > 4, end: max > 4 && el.scrollLeft < max - 4 });
     };
 
+    // Стрічку можна тягнути мишкою — на тачскріні це й так робить палець,
+    // а з мишкою інакше лишався б тільки shift+колесо.
+    //
+    // Навмисно без setPointerCapture: захоплення перенаправляє подальший
+    // click на стрічку, і кнопки тем усередині перестають натискатися.
+    // Тому рух і відпускання слухаємо на вікні.
+    let holding = false;
+    let from = 0;
+    let at = 0;
+    let dragged = false;
+
+    const onDown = (event: PointerEvent) => {
+      if (event.button !== 0) return;
+      holding = true;
+      dragged = false;
+      from = event.clientX;
+      at = el.scrollLeft;
+    };
+
+    const onMove = (event: PointerEvent) => {
+      if (!holding) return;
+      const shift = event.clientX - from;
+      if (!dragged && Math.abs(shift) < 5) return;
+      dragged = true;
+      el.scrollLeft = at - shift;
+    };
+
+    const onUp = () => {
+      holding = false;
+    };
+
+    // Тягнули — значить не тиснули: інакше кожне перетягування
+    // закінчувалося б випадковим вибором теми під курсором.
+    const onClick = (event: MouseEvent) => {
+      if (!dragged) return;
+      event.preventDefault();
+      event.stopPropagation();
+      dragged = false;
+    };
+
     update();
     el.addEventListener("scroll", update, { passive: true });
+    el.addEventListener("pointerdown", onDown);
+    el.addEventListener("click", onClick, true);
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
+
     const observer = new ResizeObserver(update);
     observer.observe(el);
 
     return () => {
       el.removeEventListener("scroll", update);
+      el.removeEventListener("pointerdown", onDown);
+      el.removeEventListener("click", onClick, true);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
       observer.disconnect();
     };
   }, [tags]);
@@ -69,7 +120,7 @@ export default function ArticlesBrowser({ cards, tags, labels }: Props) {
           ref={strip}
           data-fade-start={fade.start ? "" : undefined}
           data-fade-end={fade.end ? "" : undefined}
-          className="tag-scroller min-w-0 lg:flex-1"
+          className="tag-scroller min-w-0 select-none lg:flex-1"
         >
           <ul className="flex w-max gap-2 py-2">
             {[ALL, ...tags].map((item) => {
