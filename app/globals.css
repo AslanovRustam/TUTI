@@ -7,6 +7,9 @@
 
    ЗАМІНА ШРИФТУ: цей імпорт + --font-display / --font-sans нижче. */
 @import "@fontsource-variable/nunito/wght.css";
+/* Курсив окремим файлом: браузер тягне його лише там, де курсив справді
+   трапиться — у цитатах статей. На решті сторінок це нічого не коштує. */
+@import "@fontsource-variable/nunito/wght-italic.css";
 
 @theme {
   --font-display: "Nunito Variable", "Segoe UI", sans-serif;
@@ -26,7 +29,7 @@
      1.4–2.4:1 і не проходять WCAG AA. */
   --color-sky: #5fb0ea;
   --color-sky-soft: #d6ecfa;
-  --color-sky-deep: #1c6fa8;
+  --color-sky-deep: #19669b;
   --color-grass: #7bc96f;
   --color-grass-soft: #dff2db;
   --color-grass-deep: #2f7a3e;
@@ -211,6 +214,7 @@
   /* Картка. Жодних тіней — тримається на різниці кольору з фоном
      секції. На наведенні лише трохи підіймається. */
   .card {
+    border-radius: var(--radius-card);
     transition: transform 0.4s var(--ease-bounce);
   }
 
@@ -272,6 +276,43 @@
       opacity: 1;
       transform: rotate(var(--deco-tilt)) scale(1);
     }
+  }
+
+  /* Стрічка тем на сторінці статей. Коли тем більше, ніж влазить у
+     рядок, крайні розчиняються у тлі — це єдиний натяк, що є куди
+     гортати, бо смугу прокрутки тут сховано. Межі вмикає JS: чистим
+     CSS не дізнатися, чи докрутили вже до краю. */
+  .tag-scroller {
+    --fade-start: 0px;
+    --fade-end: 0px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      black var(--fade-start),
+      black calc(100% - var(--fade-end)),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      black var(--fade-start),
+      black calc(100% - var(--fade-end)),
+      transparent 100%
+    );
+  }
+
+  .tag-scroller::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tag-scroller[data-fade-start] {
+    --fade-start: 2.5rem;
+  }
+
+  .tag-scroller[data-fade-end] {
+    --fade-end: 2.5rem;
   }
 
   /* ── Іскри за курсором ──────────────────────────────────────
