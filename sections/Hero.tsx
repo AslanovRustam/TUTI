@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 
 import Button from "@/components/Button";
 import { getArt } from "@/content/images";
@@ -13,9 +13,12 @@ export default function Hero() {
   return (
     <section
       id="top"
-      className="stars stars-fall relative overflow-hidden px-5 pt-32 pb-16 sm:px-8 sm:pt-36 sm:pb-24"
+      className="stars stars-fall relative overflow-hidden px-5 pt-32 pb-16 sm:px-8 sm:pb-24 lg:pt-28"
     >
-      <h1 className="hero-pop mx-auto max-w-[68rem] text-center text-[clamp(3.5rem,10.5vw,8.75rem)]">
+      {/* Рамка переносу в em, а не в rem: інакше на середніх ширинах
+          заголовок вміщався в один рядок, «Тут» ставало впритул до краю
+          рамки, і смужки на його куті вилітали за екран. */}
+      <h1 className="hero-pop mx-auto max-w-[7.8em] text-center text-[clamp(2.8rem,8.4vw,7rem)]">
         {/* Смужки висять на куті «Т»: right/bottom прив'язані до самого
             слова, тож декор їде за текстом на будь-якій ширині. Зсув
             зроблено від'ємним margin, а не translate — translate тут
@@ -28,7 +31,7 @@ export default function Hero() {
             quality={STICKER_QUALITY}
             sizes="(min-width: 640px) 352px, 128px"
             style={{ "--deco-tilt": "-40deg" } as React.CSSProperties}
-            className="hero-deco pointer-events-none absolute right-full bottom-full -mr-[0.34em] -mb-[0.44em] h-auto w-16 sm:w-[11rem]"
+            className="hero-deco pointer-events-none absolute right-full bottom-full -mr-[0.34em] -mb-[0.44em] h-auto w-[3.2rem] sm:w-[8.8rem]"
           />
         </span>{" "}
         {hero.title.middle}{" "}
@@ -40,21 +43,21 @@ export default function Hero() {
             quality={STICKER_QUALITY}
             sizes="(min-width: 640px) 256px, 112px"
             style={{ "--deco-tilt": "14deg" } as React.CSSProperties}
-            className="hero-deco pointer-events-none absolute -right-6 -bottom-4 h-auto w-14 sm:-right-[5.125rem] sm:-bottom-6 sm:w-[8rem]"
+            className="hero-deco pointer-events-none absolute -right-[1.2rem] -bottom-[0.8rem] h-auto w-[2.8rem] sm:-right-[4.1rem] sm:-bottom-[1.2rem] sm:w-[6.4rem]"
           />
         </span>
       </h1>
 
       {/* Декор живе поза кадром, який анімується й обрізає вміст */}
-      <div className="relative mx-auto mt-6 max-w-[88rem] sm:mt-8">
-        <div className="hero-rise overflow-hidden rounded-[2.5rem]">
-          <Image
-            src={getArt(hero.cover)}
-            alt={hero.coverAlt}
-            sizes="(min-width: 1472px) 1408px, 94vw"
-            className="block w-full"
-            priority
-          />
+      <div className="relative mx-auto mt-6 max-w-7xl">
+        {/* На великому екрані кадр міряється не пропорцією, а часткою
+            вікна: фіксована пропорція, з якою кнопки влазять і на 900,
+            на 1080 давала б непотрібно вузьку смугу. Межі знизу й
+            зверху — щоб на дуже низьких чи дуже високих вікнах кадр не
+            вироджувався. На телефоні перший екран однаково не вміщає
+            секцію, тож там кадр лишається рідним. */}
+        <div className="hero-rise aspect-[16/9] overflow-hidden rounded-[2.5rem] lg:aspect-auto lg:h-[40vh] lg:max-h-[27.5rem] lg:min-h-[19rem]">
+          <Cover />
         </div>
 
         <Image
@@ -75,8 +78,9 @@ export default function Hero() {
         />
       </div>
 
-      {/* Під картинкою: текст ліворуч, кнопки праворуч */}
-      <div className="mx-auto mt-8 flex max-w-[88rem] flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+      {/* Під картинкою: текст ліворуч, кнопки праворуч. Відступ трохи
+          більший за решту: у правому куті над кнопками висять кубики. */}
+      <div className="mx-auto mt-10 flex max-w-7xl flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
         <p className="max-w-2xl text-[clamp(1.15rem,2.4vw,1.6rem)] leading-snug font-bold">
           {hero.lead}
         </p>
@@ -91,5 +95,56 @@ export default function Hero() {
         </div>
       </div>
     </section>
+  );
+}
+
+/**
+ * Обкладинка героя двома кадрами.
+ *
+ * Широкий намальований одразу під низьку смугу, тож на десктопі його
+ * лишається хіба трохи підрізати. Звичайний кадр лишається телефону:
+ * там 7:3 перетворилося б на стрічку заввишки з палець.
+ *
+ * <picture> збирається руками, бо next/image вміє лише один кадр;
+ * getImageProps дає готові srcSet від того самого оптимізатора.
+ */
+function Cover() {
+  const wide = getArt(hero.coverWide);
+  const tall = getArt(hero.cover);
+
+  const {
+    props: { srcSet: wideSrcSet },
+  } = getImageProps({
+    src: wide,
+    alt: hero.coverAlt,
+    width: wide.width,
+    height: wide.height,
+    sizes: "(min-width: 1344px) 1280px, 94vw",
+  });
+
+  const {
+    props: { srcSet: tallSrcSet, ...rest },
+  } = getImageProps({
+    src: tall,
+    alt: hero.coverAlt,
+    width: tall.width,
+    height: tall.height,
+    sizes: "94vw",
+    priority: true,
+  });
+
+  return (
+    <picture className="block h-full w-full">
+      <source
+        media="(min-width: 1024px)"
+        srcSet={wideSrcSet}
+        sizes="(min-width: 1344px) 1280px, 94vw"
+      />
+      <img
+        {...rest}
+        srcSet={tallSrcSet}
+        className="block h-full w-full object-cover object-center"
+      />
+    </picture>
   );
 }

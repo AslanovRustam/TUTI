@@ -43,6 +43,7 @@ import campLake from "@/assets/illustrations/camp-lake.webp";
 import campfireCooking from "@/assets/illustrations/campfire-cooking.webp";
 import crewWinter from "@/assets/illustrations/crew-winter.webp";
 import heroTuti from "@/assets/illustrations/hero-tuti.webp";
+import heroTutiWide from "@/assets/illustrations/hero-tuti-wide.webp";
 import logo from "@/assets/illustrations/logo.webp";
 import shapesMeadow from "@/assets/illustrations/shapes-meadow.webp";
 import winterSnowman from "@/assets/illustrations/winter-snowman.webp";
@@ -77,6 +78,7 @@ const art = {
   "face-hedgehog": faceHedgehog,
   "face-squirrel": faceSquirrel,
   "hero-tuti": heroTuti,
+  "hero-tuti-wide": heroTutiWide,
   "home-tall": homeTall,
   "home-wide": homeWide,
   "hut-dressed": hutDressed,
