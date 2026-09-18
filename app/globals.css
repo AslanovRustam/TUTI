@@ -416,9 +416,8 @@
 }
 
 /* ── Курсори ──────────────────────────────────────────────────────────
-   Намальовані рукавички замість системних. Звичайний курсор — простий
-   палець, а зірочки лишилися ознакою того, що на це можна натиснути:
-   системної стрілки на сайті немає взагалі.
+   Намальовані кадри замість системних. Звичайний курсор — стрілка,
+   а зірочки на пальці означають, що на це можна натиснути.
 
    Числа після url() — гаряча точка в пікселях; вони й розміри кадрів
    задаються в CURSOR_SPECS у scripts/prepare-assets.py, тож міняти
@@ -433,14 +432,14 @@
   @layer base {
     body {
       cursor:
-        url("../assets/cursors/pointer.png") 12 3,
+        url("../assets/cursors/default.png") 8 1,
         default;
       cursor:
         image-set(
-            url("../assets/cursors/pointer.png") 1x,
-            url("../assets/cursors/pointer-2x.png") 2x
+            url("../assets/cursors/default.png") 1x,
+            url("../assets/cursors/default-2x.png") 2x
           )
-          12 3,
+          8 1,
         default;
     }
 
